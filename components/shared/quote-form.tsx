@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FileText } from "lucide-react";
 
 export function QuoteForm({ requestItemId }: { requestItemId: string }) {
   const router = useRouter();
@@ -42,8 +43,8 @@ export function QuoteForm({ requestItemId }: { requestItemId: string }) {
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="btn-primary h-9 px-4 text-xs">
-        🧾 Envoyer un devis
+      <button onClick={() => setOpen(true)} className="btn-primary flex h-9 items-center gap-1.5 px-4 text-xs">
+        <FileText size={14} strokeWidth={1.75} /> Envoyer un devis
       </button>
     );
   }

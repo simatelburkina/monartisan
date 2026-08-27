@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { MapPin, Clock, Wallet } from "lucide-react";
 import { requireUser } from "@/lib/data/auth";
 import { getMatchingRequestsForArtisan } from "@/lib/data/requests";
 import { StatusBadge } from "@/components/shared/status-badge";
+import { CategoryIcon } from "@/lib/utils/category-icons";
 import { formatFCFA, timeAgo, URGENCY_LABELS } from "@/lib/utils/format";
 
 export const metadata = { title: "Nouvelles demandes" };
@@ -32,7 +34,7 @@ export default async function ArtisanRequestsFeedPage() {
               status: string;
               created_at: string;
             };
-            const category = it.categories as { name: string; icon: string } | null;
+            const category = it.categories as { name: string; icon: string; slug: string } | null;
             const myResponse = ((it.request_responses as Array<{ artisan_id: string; decision: string }>) || []).find(
               (r) => r.artisan_id === me.id
             );
@@ -44,19 +46,25 @@ export default async function ArtisanRequestsFeedPage() {
               >
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <p className="font-semibold">
-                      {category?.icon} {req.title}
+                    <p className="flex items-center gap-1.5 font-semibold">
+                      {category && <CategoryIcon slug={category.slug} size={16} />} {req.title}
                     </p>
                     <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{req.description}</p>
                   </div>
                   <StatusBadge status={req.status} />
                 </div>
                 <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
-                  {req.city && <span>📍 {req.city}</span>}
-                  <span>⏱ {URGENCY_LABELS[req.urgency]}</span>
+                  {req.city && (
+                    <span className="flex items-center gap-1">
+                      <MapPin size={12} strokeWidth={1.75} /> {req.city}
+                    </span>
+                  )}
+                  <span className="flex items-center gap-1">
+                    <Clock size={12} strokeWidth={1.75} /> {URGENCY_LABELS[req.urgency]}
+                  </span>
                   {(req.budget_min || req.budget_max) && (
-                    <span>
-                      💰 {formatFCFA(req.budget_min)} - {formatFCFA(req.budget_max)}
+                    <span className="flex items-center gap-1">
+                      <Wallet size={12} strokeWidth={1.75} /> {formatFCFA(req.budget_min)} - {formatFCFA(req.budget_max)}
                     </span>
                   )}
                   <span>{timeAgo(req.created_at)}</span>

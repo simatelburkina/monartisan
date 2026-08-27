@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { Check, Pencil, X } from "lucide-react";
 
 export function QuoteActions({ quoteId, status }: { quoteId: string; status: string }) {
   const router = useRouter();
@@ -26,14 +27,18 @@ export function QuoteActions({ quoteId, status }: { quoteId: string; status: str
 
   return (
     <div className="mt-3 flex flex-wrap gap-2">
-      <button onClick={() => act("accept")} disabled={pending} className="btn-primary h-9 px-4 text-xs">
-        ✅ Accepter
+      <button onClick={() => act("accept")} disabled={pending} className="btn-primary flex h-9 items-center gap-1.5 px-4 text-xs">
+        <Check size={14} strokeWidth={2} /> Accepter
       </button>
-      <button onClick={() => act("request_modification")} disabled={pending} className="btn-secondary h-9 px-4 text-xs">
-        ✏️ Demander une modification
+      <button onClick={() => act("request_modification")} disabled={pending} className="btn-secondary flex h-9 items-center gap-1.5 px-4 text-xs">
+        <Pencil size={14} strokeWidth={1.75} /> Demander une modification
       </button>
-      <button onClick={() => act("reject")} disabled={pending} className="h-9 rounded-lg border border-danger px-4 text-xs font-medium text-danger">
-        ✖ Refuser
+      <button
+        onClick={() => act("reject")}
+        disabled={pending}
+        className="flex h-9 items-center gap-1.5 rounded-lg border border-danger px-4 text-xs font-medium text-danger"
+      >
+        <X size={14} strokeWidth={2} /> Refuser
       </button>
     </div>
   );

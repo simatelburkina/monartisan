@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Flag } from "lucide-react";
 import type { ComplaintReason } from "@/lib/types/database";
 
 const REASONS: { value: ComplaintReason; label: string }[] = [
@@ -33,8 +34,8 @@ export function ComplaintForm({ bookingId, againstId }: { bookingId?: string; ag
 
   if (!open) {
     return (
-      <button onClick={() => setOpen(true)} className="mt-2 text-xs font-medium text-danger hover:underline">
-        🚩 Signaler un problème
+      <button onClick={() => setOpen(true)} className="mt-2 flex items-center gap-1 text-xs font-medium text-danger hover:underline">
+        <Flag size={13} strokeWidth={1.75} /> Signaler un problème
       </button>
     );
   }

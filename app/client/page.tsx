@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ClipboardPlus } from "lucide-react";
 import { requireUser } from "@/lib/data/auth";
 import { getClientRequests, getBookingsFor } from "@/lib/data/requests";
 import { StatusBadge } from "@/components/shared/status-badge";
@@ -16,7 +17,7 @@ export default async function ClientDashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Bonjour {me.first_name || ""} 👋</h1>
+        <h1 className="text-2xl font-bold">Bonjour {me.first_name || ""}</h1>
         <p className="text-muted-foreground">Voici un aperçu de votre activité.</p>
       </div>
 
@@ -34,8 +35,8 @@ export default async function ClientDashboardPage() {
         ))}
       </div>
 
-      <Link href="/client/requests/new" className="btn-primary w-fit">
-        📝 Publier une nouvelle demande
+      <Link href="/client/requests/new" className="btn-primary flex w-fit items-center gap-1.5">
+        <ClipboardPlus size={16} strokeWidth={1.75} /> Publier une nouvelle demande
       </Link>
 
       <section>

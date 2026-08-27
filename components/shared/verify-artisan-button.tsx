@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { BadgeCheck } from "lucide-react";
 
 export function VerifyArtisanButton({ artisanId, isVerified }: { artisanId: string; isVerified: boolean }) {
   const router = useRouter();
@@ -22,9 +23,17 @@ export function VerifyArtisanButton({ artisanId, isVerified }: { artisanId: stri
     <button
       onClick={toggle}
       disabled={pending}
-      className={isVerified ? "rounded-lg bg-stone-200 px-3 py-1.5 text-xs font-medium text-stone-700" : "btn-primary h-8 px-3 text-xs"}
+      className={
+        isVerified
+          ? "rounded-lg bg-stone-200 px-3 py-1.5 text-xs font-medium text-stone-700"
+          : "btn-primary flex h-8 items-center gap-1.5 px-3 text-xs"
+      }
     >
-      {isVerified ? "Retirer le badge vérifié" : "✅ Vérifier"}
+      {isVerified ? "Retirer le badge vérifié" : (
+        <>
+          <BadgeCheck size={14} strokeWidth={1.75} /> Vérifier
+        </>
+      )}
     </button>
   );
 }

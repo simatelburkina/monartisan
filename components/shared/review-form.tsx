@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Star } from "lucide-react";
 
 export function ReviewForm({ bookingId }: { bookingId: string }) {
   const router = useRouter();
@@ -25,8 +26,8 @@ export function ReviewForm({ bookingId }: { bookingId: string }) {
       <p className="font-semibold">Noter cette prestation</p>
       <div className="mt-2 flex gap-1">
         {[1, 2, 3, 4, 5].map((n) => (
-          <button key={n} type="button" onClick={() => setRating(n)} className="text-2xl">
-            {n <= rating ? "⭐" : "☆"}
+          <button key={n} type="button" onClick={() => setRating(n)}>
+            <Star size={26} strokeWidth={1.5} className={n <= rating ? "fill-amber-500 text-amber-500" : "text-border"} />
           </button>
         ))}
       </div>

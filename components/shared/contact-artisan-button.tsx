@@ -2,6 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { MessageCircle } from "lucide-react";
 
 export function ContactArtisanButton({ artisanId, isClient }: { artisanId: string; isClient: boolean }) {
   const router = useRouter();
@@ -26,8 +27,8 @@ export function ContactArtisanButton({ artisanId, isClient }: { artisanId: strin
   }
 
   return (
-    <button onClick={handleClick} disabled={pending} className="btn-primary disabled:opacity-60">
-      💬 {pending ? "..." : "Contacter"}
+    <button onClick={handleClick} disabled={pending} className="btn-primary flex items-center gap-1.5 disabled:opacity-60">
+      <MessageCircle size={16} strokeWidth={1.75} /> {pending ? "..." : "Contacter"}
     </button>
   );
 }

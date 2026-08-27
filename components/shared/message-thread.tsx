@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Paperclip, FileText, Send } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatDateTime } from "@/lib/utils/format";
 import type { Message } from "@/lib/types/database";
@@ -88,8 +89,8 @@ export function MessageThread({
                     <img src={m.attachment_url} alt="Pièce jointe" className="mt-1 max-w-full rounded-lg" />
                   )}
                   {m.attachment_url && m.attachment_type === "document" && (
-                    <a href={m.attachment_url} target="_blank" rel="noreferrer" className="mt-1 block underline">
-                      📎 Document joint
+                    <a href={m.attachment_url} target="_blank" rel="noreferrer" className="mt-1 flex items-center gap-1.5 underline">
+                      <FileText size={14} strokeWidth={1.75} /> Document joint
                     </a>
                   )}
                   <p className={`mt-1 text-[10px] ${mine ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
@@ -110,8 +111,8 @@ export function MessageThread({
         }}
         className="mx-auto flex w-full max-w-2xl items-center gap-2 border-t border-border p-3"
       >
-        <label className="cursor-pointer rounded-full border border-border p-2.5 hover:bg-muted">
-          📎
+        <label className="flex cursor-pointer items-center justify-center rounded-full border border-border p-2.5 text-muted-foreground hover:bg-muted hover:text-foreground">
+          <Paperclip size={18} strokeWidth={1.75} />
           <input type="file" className="hidden" onChange={handleFile} accept="image/*,application/pdf" />
         </label>
         <input
@@ -120,8 +121,8 @@ export function MessageThread({
           placeholder="Écrire un message..."
           className="input flex-1"
         />
-        <button type="submit" disabled={sending || !text.trim()} className="btn-primary">
-          Envoyer
+        <button type="submit" disabled={sending || !text.trim()} className="btn-primary flex items-center gap-1.5">
+          <Send size={16} strokeWidth={1.75} /> Envoyer
         </button>
       </form>
     </div>

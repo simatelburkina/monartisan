@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Bell } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { timeAgo } from "@/lib/utils/format";
 import type { Notification } from "@/lib/types/database";
@@ -36,10 +37,10 @@ export function NotificationBell({ userId, initial }: { userId: string; initial:
     <div className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
-        className="relative flex h-9 w-9 items-center justify-center rounded-full hover:bg-muted"
+        className="relative flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground"
         aria-label="Notifications"
       >
-        🔔
+        <Bell size={19} strokeWidth={1.75} />
         {unread > 0 && (
           <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-danger px-1 text-[10px] font-bold text-white">
             {unread}

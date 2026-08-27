@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { CheckCircle2, User, Wrench } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 export function RegisterForm() {
@@ -54,7 +55,7 @@ export function RegisterForm() {
   if (success) {
     return (
       <div className="text-center">
-        <p className="text-2xl">✅</p>
+        <CheckCircle2 size={40} strokeWidth={1.5} className="mx-auto text-accent" />
         <h2 className="mt-2 font-semibold">Compte créé !</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Vérifiez votre email pour confirmer votre compte. Redirection vers la connexion...
@@ -72,20 +73,20 @@ export function RegisterForm() {
         <button
           type="button"
           onClick={() => setRole("client")}
-          className={`rounded-lg py-2 text-sm font-medium transition ${
+          className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${
             role === "client" ? "bg-card shadow-sm" : "text-muted-foreground"
           }`}
         >
-          👤 Je suis client
+          <User size={16} strokeWidth={1.75} /> Je suis client
         </button>
         <button
           type="button"
           onClick={() => setRole("artisan")}
-          className={`rounded-lg py-2 text-sm font-medium transition ${
+          className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm font-medium transition ${
             role === "artisan" ? "bg-card shadow-sm" : "text-muted-foreground"
           }`}
         >
-          🧰 Je suis artisan
+          <Wrench size={16} strokeWidth={1.75} /> Je suis artisan
         </button>
       </div>
 

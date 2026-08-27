@@ -1,3 +1,4 @@
+import { BadgeCheck } from "lucide-react";
 import { STATUS_LABELS } from "@/lib/utils/format";
 
 const COLORS: Record<string, string> = {
@@ -29,13 +30,7 @@ export function StatusBadge({ status }: { status: string }) {
 export function VerifiedBadge() {
   return (
     <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">
-      <svg width="12" height="12" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-        <path
-          fillRule="evenodd"
-          d="M10 1.5l2.1 1.1 2.35-.4 1.15 2.05 2.05 1.15-.4 2.35L18.5 10l-1.1 2.1.4 2.35-2.05 1.15-1.15 2.05-2.35-.4L10 18.5l-2.1-1.1-2.35.4-1.15-2.05-2.05-1.15.4-2.35L1.5 10l1.1-2.1-.4-2.35 2.05-1.15L5.4 2.35l2.35.4L10 1.5zm3.7 6.3a1 1 0 0 0-1.4-1.4L9 9.68 7.2 7.88a1 1 0 1 0-1.4 1.42l2.5 2.5a1 1 0 0 0 1.4 0l4-4z"
-          clipRule="evenodd"
-        />
-      </svg>
+      <BadgeCheck size={13} strokeWidth={2} />
       Artisan vérifié
     </span>
   );

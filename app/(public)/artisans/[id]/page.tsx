@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { MapPin, Wrench, ClipboardPlus } from "lucide-react";
 import { getArtisanById, getArtisanReviews } from "@/lib/data/artisans";
 import { getCurrentUser } from "@/lib/data/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -6,6 +7,7 @@ import { RatingStars } from "@/components/shared/rating-stars";
 import { VerifiedBadge } from "@/components/shared/status-badge";
 import { FavoriteButton } from "@/components/shared/favorite-button";
 import { ContactArtisanButton } from "@/components/shared/contact-artisan-button";
+import { CategoryIcon } from "@/lib/utils/category-icons";
 import { initials, timeAgo, formatFCFA } from "@/lib/utils/format";
 import Link from "next/link";
 
@@ -20,7 +22,7 @@ export default async function ArtisanDetailPage({ params }: { params: Promise<{ 
 
   const profile = artisan.profile as Record<string, unknown>;
   const name = (profile.company_name as string) || (profile.display_name as string) || "Artisan";
-  const categories = (artisan.artisan_categories as Array<{ hourly_rate: number | null; categories: { id: string; name: string; icon: string } }>) || [];
+  const categories = (artisan.artisan_categories as Array<{ hourly_rate: number | null; categories: { id: string; name: string; slug: string; icon: string } }>) || [];
   const zones = (artisan.artisan_zones as Array<{ city: string; district: string | null }>) || [];
   const portfolio = (artisan.portfolio_items as Array<{ id: string; image_url: string; caption: string | null }>) || [];
 
@@ -55,8 +57,14 @@ export default async function ArtisanDetailPage({ params }: { params: Promise<{ 
           <p className="mt-1 text-muted-foreground">{artisan.headline as string}</p>
           <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <RatingStars value={Number(artisan.rating_avg) || 0} count={Number(artisan.rating_count) || 0} />
-            {profile.city ? <span>📍 {profile.city as string}</span> : null}
-            <span>🛠️ {artisan.years_experience as number} ans d&apos;expérience</span>
+            {profile.city ? (
+              <span className="flex items-center gap-1">
+                <MapPin size={14} strokeWidth={1.75} /> {profile.city as string}
+              </span>
+            ) : null}
+            <span className="flex items-center gap-1">
+              <Wrench size={14} strokeWidth={1.75} /> {artisan.years_experience as number} ans d&apos;expérience
+            </span>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">
             <ContactArtisanButton artisanId={id} isClient={me?.role === "client"} />
@@ -64,9 +72,9 @@ export default async function ArtisanDetailPage({ params }: { params: Promise<{ 
             {me?.role === "client" && (
               <Link
                 href={`/client/requests/new?artisan=${id}`}
-                className="btn-secondary"
+                className="btn-secondary flex items-center gap-1.5"
               >
-                📝 Demander un devis
+                <ClipboardPlus size={16} strokeWidth={1.75} /> Demander un devis
               </Link>
             )}
           </div>
@@ -85,8 +93,9 @@ export default async function ArtisanDetailPage({ params }: { params: Promise<{ 
           <h2 className="font-semibold">Spécialités & tarifs indicatifs</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {categories.map((c) => (
-              <span key={c.categories.id} className="rounded-full bg-muted px-3 py-1.5 text-sm">
-                {c.categories.icon} {c.categories.name}
+              <span key={c.categories.id} className="flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-sm">
+                <CategoryIcon slug={c.categories.slug} size={15} />
+                {c.categories.name}
                 {c.hourly_rate ? ` — ${formatFCFA(c.hourly_rate)}/h` : ""}
               </span>
             ))}

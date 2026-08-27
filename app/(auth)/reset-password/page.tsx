@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { CheckCircle2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ResetPasswordPage() {
@@ -38,7 +39,7 @@ export default function ResetPasswordPage() {
   if (success) {
     return (
       <div className="text-center">
-        <p className="text-2xl">✅</p>
+        <CheckCircle2 size={40} strokeWidth={1.5} className="mx-auto text-accent" />
         <h2 className="mt-2 font-semibold">Mot de passe mis à jour</h2>
         <p className="mt-1 text-sm text-muted-foreground">Redirection vers la connexion...</p>
       </div>

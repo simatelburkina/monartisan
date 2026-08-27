@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { ArrowLeft, MailCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ForgotPasswordPage() {
@@ -29,7 +30,7 @@ export default function ForgotPasswordPage() {
   if (sent) {
     return (
       <div className="text-center">
-        <p className="text-2xl">📩</p>
+        <MailCheck size={40} strokeWidth={1.5} className="mx-auto text-primary" />
         <h2 className="mt-2 font-semibold">Email envoyé</h2>
         <p className="mt-1 text-sm text-muted-foreground">
           Consultez votre boîte mail pour réinitialiser votre mot de passe.
@@ -52,8 +53,8 @@ export default function ForgotPasswordPage() {
         </button>
       </form>
       <p className="mt-4 text-center text-sm text-muted-foreground">
-        <Link href="/login" className="font-medium text-primary hover:underline">
-          ← Retour à la connexion
+        <Link href="/login" className="inline-flex items-center gap-1 font-medium text-primary hover:underline">
+          <ArrowLeft size={14} strokeWidth={2} /> Retour à la connexion
         </Link>
       </p>
     </div>

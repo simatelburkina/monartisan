@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { Check, HelpCircle, X } from "lucide-react";
 
 export function RequestItemResponder({ itemId, existingDecision }: { itemId: string; existingDecision?: string }) {
   const router = useRouter();
@@ -24,25 +25,35 @@ export function RequestItemResponder({ itemId, existingDecision }: { itemId: str
   }
 
   if (existingDecision) {
-    const labels: Record<string, string> = {
-      interested: "✅ Vous êtes intéressé",
-      declined: "✖ Vous avez refusé",
-      info_requested: "❓ Vous avez demandé des précisions",
+    const config: Record<string, { icon: typeof Check; label: string }> = {
+      interested: { icon: Check, label: "Vous êtes intéressé" },
+      declined: { icon: X, label: "Vous avez refusé" },
+      info_requested: { icon: HelpCircle, label: "Vous avez demandé des précisions" },
     };
-    return <p className="text-sm text-muted-foreground">{labels[existingDecision] || existingDecision}</p>;
+    const c = config[existingDecision];
+    return (
+      <p className="flex items-center gap-1.5 text-sm text-muted-foreground">
+        {c && <c.icon size={14} strokeWidth={1.75} />}
+        {c?.label || existingDecision}
+      </p>
+    );
   }
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-wrap gap-2">
-        <button onClick={() => respond("interested")} disabled={pending} className="btn-primary h-9 px-4 text-xs">
-          ✅ Je suis intéressé
+        <button onClick={() => respond("interested")} disabled={pending} className="btn-primary flex h-9 items-center gap-1.5 px-4 text-xs">
+          <Check size={14} strokeWidth={2} /> Je suis intéressé
         </button>
-        <button onClick={() => setShowInfoBox((s) => !s)} className="btn-secondary h-9 px-4 text-xs">
-          ❓ Infos complémentaires
+        <button onClick={() => setShowInfoBox((s) => !s)} className="btn-secondary flex h-9 items-center gap-1.5 px-4 text-xs">
+          <HelpCircle size={14} strokeWidth={1.75} /> Infos complémentaires
         </button>
-        <button onClick={() => respond("declined")} disabled={pending} className="h-9 rounded-lg border border-danger px-4 text-xs font-medium text-danger">
-          ✖ Refuser
+        <button
+          onClick={() => respond("declined")}
+          disabled={pending}
+          className="flex h-9 items-center gap-1.5 rounded-lg border border-danger px-4 text-xs font-medium text-danger"
+        >
+          <X size={14} strokeWidth={2} /> Refuser
         </button>
       </div>
       {showInfoBox && (

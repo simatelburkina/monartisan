@@ -2,17 +2,18 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { Car, PlayCircle, CheckCircle2, Lock, Wallet, type LucideIcon } from "lucide-react";
 
-const ACTIONS: Record<string, { action: string; label: string }[]> = {
+const ACTIONS: Record<string, { action: string; label: string; icon: LucideIcon }[]> = {
   artisan: [
-    { action: "en_route", label: "🚗 Je suis en route" },
-    { action: "start", label: "▶️ Démarrer la prestation" },
-    { action: "complete", label: "✅ Marquer comme terminée" },
-    { action: "close", label: "🔒 Clôturer" },
+    { action: "en_route", label: "Je suis en route", icon: Car },
+    { action: "start", label: "Démarrer la prestation", icon: PlayCircle },
+    { action: "complete", label: "Marquer comme terminée", icon: CheckCircle2 },
+    { action: "close", label: "Clôturer", icon: Lock },
   ],
   client: [
-    { action: "confirm_payment", label: "💰 Confirmer le paiement" },
-    { action: "close", label: "🔒 Clôturer" },
+    { action: "confirm_payment", label: "Confirmer le paiement", icon: Wallet },
+    { action: "close", label: "Clôturer", icon: Lock },
   ],
 };
 
@@ -46,8 +47,8 @@ export function BookingActions({ bookingId, status, role }: { bookingId: string;
   return (
     <div className="mt-4 flex flex-wrap gap-2">
       {actions.map((a) => (
-        <button key={a.action} onClick={() => act(a.action)} disabled={pending} className="btn-primary h-9 px-4 text-xs">
-          {a.label}
+        <button key={a.action} onClick={() => act(a.action)} disabled={pending} className="btn-primary flex h-9 items-center gap-1.5 px-4 text-xs">
+          <a.icon size={14} strokeWidth={1.75} /> {a.label}
         </button>
       ))}
     </div>

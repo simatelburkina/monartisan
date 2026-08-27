@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MapPin } from "lucide-react";
 import { requireUser } from "@/lib/data/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getMatchingRequestsForArtisan, getArtisanQuotes, getBookingsFor } from "@/lib/data/requests";
@@ -26,7 +27,7 @@ export default async function ArtisanDashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Bonjour {me.first_name || ""} 👋</h1>
+        <h1 className="text-2xl font-bold">Bonjour {me.first_name || ""}</h1>
         <RatingStars value={artisan?.rating_avg || 0} count={artisan?.rating_count || 0} />
       </div>
 
@@ -75,8 +76,12 @@ export default async function ArtisanDashboardPage() {
                 >
                   <div>
                     <p className="font-medium">{req.title}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {req.city ? `📍 ${req.city} · ` : ""}
+                    <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                      {req.city && (
+                        <span className="flex items-center gap-1">
+                          <MapPin size={11} strokeWidth={1.75} /> {req.city} ·
+                        </span>
+                      )}
                       {timeAgo(req.created_at)}
                     </p>
                   </div>

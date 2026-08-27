@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Paperclip } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { formatDate } from "@/lib/utils/format";
 import type { DocumentRow } from "@/lib/types/database";
@@ -52,8 +53,8 @@ export function DocumentsUploader({ artisanId, documents }: { artisanId: string;
             </option>
           ))}
         </select>
-        <label className="btn-primary mt-3 w-fit cursor-pointer">
-          {loading ? "Envoi..." : "📎 Choisir un fichier"}
+        <label className="btn-primary mt-3 flex w-fit cursor-pointer items-center gap-1.5">
+          <Paperclip size={15} strokeWidth={1.75} /> {loading ? "Envoi..." : "Choisir un fichier"}
           <input type="file" accept="image/*,application/pdf" className="hidden" onChange={handleUpload} disabled={loading} />
         </label>
       </div>

@@ -1,11 +1,13 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { MapPin, Wallet, CalendarDays } from "lucide-react";
 import { requireUser } from "@/lib/data/auth";
 import { getRequestDetail } from "@/lib/data/requests";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { RatingStars } from "@/components/shared/rating-stars";
 import { VerifiedBadge } from "@/components/shared/status-badge";
 import { QuoteActions } from "@/components/shared/quote-actions";
+import { CategoryIcon } from "@/lib/utils/category-icons";
 import { formatDate, formatFCFA, URGENCY_LABELS } from "@/lib/utils/format";
 
 export default async function RequestDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -21,9 +23,13 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
       <div className="flex items-start justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold">{request.title}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 flex flex-wrap items-center gap-1 text-sm text-muted-foreground">
             Publiée le {formatDate(request.created_at)} · {URGENCY_LABELS[request.urgency]}
-            {request.city ? ` · 📍 ${request.city}` : ""}
+            {request.city && (
+              <span className="flex items-center gap-1">
+                · <MapPin size={13} strokeWidth={1.75} /> {request.city}
+              </span>
+            )}
           </p>
         </div>
         <StatusBadge status={request.status} />
@@ -44,24 +50,28 @@ export default async function RequestDetailPage({ params }: { params: Promise<{ 
 
       <div className="mt-4 flex flex-wrap gap-3 text-sm text-muted-foreground">
         {(request.budget_min || request.budget_max) && (
-          <span>
-            💰 Budget : {formatFCFA(request.budget_min)} - {formatFCFA(request.budget_max)}
+          <span className="flex items-center gap-1.5">
+            <Wallet size={14} strokeWidth={1.75} /> Budget : {formatFCFA(request.budget_min)} - {formatFCFA(request.budget_max)}
           </span>
         )}
-        {request.desired_date && <span>📅 Souhaité le {formatDate(request.desired_date)}</span>}
+        {request.desired_date && (
+          <span className="flex items-center gap-1.5">
+            <CalendarDays size={14} strokeWidth={1.75} /> Souhaité le {formatDate(request.desired_date)}
+          </span>
+        )}
       </div>
 
       <h2 className="mt-8 text-lg font-semibold">Prestations & devis reçus</h2>
       <div className="mt-4 flex flex-col gap-4">
         {(request.request_items as Array<Record<string, unknown>>).map((item) => {
-          const category = item.categories as { name: string; icon: string };
+          const category = item.categories as { name: string; icon: string; slug: string };
           const quotes = (item.quotes as Array<Record<string, unknown>>) || [];
           const responses = (item.request_responses as Array<Record<string, unknown>>) || [];
           return (
             <div key={item.id as string} className="rounded-2xl border border-border bg-card p-4">
               <div className="flex items-center justify-between">
-                <p className="font-semibold">
-                  {category?.icon} {category?.name}
+                <p className="flex items-center gap-1.5 font-semibold">
+                  {category && <CategoryIcon slug={category.slug} size={17} />} {category?.name}
                 </p>
                 <span className="text-xs text-muted-foreground">{item.status as string}</span>
               </div>

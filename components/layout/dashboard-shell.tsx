@@ -1,11 +1,12 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
 import { LogoutButton } from "./logout-button";
 
 export interface NavItem {
   href: string;
   label: string;
-  icon: string;
+  icon: LucideIcon;
 }
 
 export function DashboardShell({
@@ -28,9 +29,9 @@ export function DashboardShell({
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-foreground hover:bg-muted"
+              className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-foreground hover:bg-muted"
             >
-              <span>{item.icon}</span>
+              <item.icon size={18} strokeWidth={1.75} className="text-muted-foreground" />
               {item.label}
             </Link>
           ))}
@@ -46,9 +47,10 @@ export function DashboardShell({
             <Link
               key={item.href}
               href={item.href}
-              className="shrink-0 rounded-full border border-border px-3 py-1.5 text-xs font-medium"
+              className="flex shrink-0 items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-xs font-medium"
             >
-              {item.icon} {item.label}
+              <item.icon size={14} strokeWidth={1.75} />
+              {item.label}
             </Link>
           ))}
         </nav>

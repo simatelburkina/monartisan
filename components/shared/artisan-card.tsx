@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MapPin } from "lucide-react";
 import { RatingStars } from "./rating-stars";
 import { VerifiedBadge } from "./status-badge";
 import { initials } from "@/lib/utils/format";
@@ -42,7 +43,11 @@ export function ArtisanCard({ artisan }: { artisan: ArtisanCardData }) {
             {artisan.is_verified && <VerifiedBadge />}
           </div>
           <p className="truncate text-sm text-muted-foreground">{artisan.headline || "Artisan"}</p>
-          {artisan.city && <p className="text-xs text-muted-foreground">📍 {artisan.city}</p>}
+          {artisan.city && (
+            <p className="flex items-center gap-1 text-xs text-muted-foreground">
+              <MapPin size={12} strokeWidth={1.75} /> {artisan.city}
+            </p>
+          )}
         </div>
       </div>
       {artisan.categories && artisan.categories.length > 0 && (
