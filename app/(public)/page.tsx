@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Search, ClipboardPlus, Wrench, MessagesSquare, Star, ArrowRight } from "lucide-react";
 import { getCategories } from "@/lib/data/categories";
 import { searchArtisans } from "@/lib/data/artisans";
@@ -19,8 +20,16 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section className="bg-gradient-to-b from-primary/10 to-background px-4 py-14 sm:py-20">
-        <div className="mx-auto max-w-3xl text-center">
+      <section className="relative overflow-hidden px-4 py-14 sm:py-20">
+        <Image
+          src="/banniere.jpeg"
+          alt=""
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-background/85" />
+        <div className="relative mx-auto max-w-3xl text-center">
           <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">
             Que recherchez-vous ?
           </h1>
