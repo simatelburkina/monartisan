@@ -1,18 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { ReactNode } from "react";
+import { cloneElement, useEffect, useState } from "react";
+import type { ReactElement, ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import type { LucideIcon } from "lucide-react";
+import type { LucideProps } from "lucide-react";
 import { ChevronsLeft, ChevronsRight, MoreHorizontal, X } from "lucide-react";
 import { LogoutButton } from "./logout-button";
 
 export interface NavItem {
   href: string;
   label: string;
-  icon: LucideIcon;
+  icon: ReactElement<LucideProps>;
+}
+
+function navIcon(icon: ReactElement<LucideProps>, props: LucideProps) {
+  return cloneElement(icon, props);
 }
 
 const COLLAPSE_KEY = "ma-sidebar-collapsed";
@@ -89,7 +93,7 @@ export function DashboardShell({
                         : "text-sidebar-foreground/85 hover:bg-white/5 hover:text-sidebar-foreground"
                     } ${collapsed ? "justify-center" : ""}`}
                   >
-                    <item.icon size={18} strokeWidth={1.75} className="shrink-0" />
+                    {navIcon(item.icon, { size: 18, strokeWidth: 1.75, className: "shrink-0" })}
                     {!collapsed && <span className="truncate">{item.label}</span>}
                   </Link>
                 </li>
@@ -146,7 +150,7 @@ export function DashboardShell({
                 active ? "text-primary" : "text-muted-foreground"
               }`}
             >
-              <item.icon size={20} strokeWidth={active ? 2.25 : 1.75} />
+              {navIcon(item.icon, { size: 20, strokeWidth: active ? 2.25 : 1.75 })}
               <span className="max-w-[4.5rem] truncate">{item.label}</span>
             </Link>
           );
@@ -188,7 +192,7 @@ export function DashboardShell({
                       isActive(item.href) ? "border-primary/40 bg-primary/10 text-primary" : "text-foreground"
                     }`}
                   >
-                    <item.icon size={20} strokeWidth={1.75} />
+                    {navIcon(item.icon, { size: 20, strokeWidth: 1.75 })}
                     <span className="text-center leading-tight">{item.label}</span>
                   </Link>
                 </li>

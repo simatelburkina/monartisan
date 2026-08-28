@@ -6,13 +6,13 @@ import { DashboardShell, type NavItem } from "@/components/layout/dashboard-shel
 import { WhatsAppButton } from "@/components/shared/whatsapp-button";
 
 const NAV_ITEMS: NavItem[] = [
-  { href: "/client", label: "Tableau de bord", icon: Home },
-  { href: "/client/requests", label: "Mes demandes", icon: ClipboardList },
-  { href: "/client/bookings", label: "Mes prestations", icon: CalendarCheck },
-  { href: "/messages", label: "Messages", icon: MessageCircle },
-  { href: "/client/favorites", label: "Favoris", icon: Heart },
-  { href: "/client/reviews", label: "Mes avis", icon: Star },
-  { href: "/client/profile", label: "Mon profil", icon: User },
+  { href: "/client", label: "Tableau de bord", icon: <Home /> },
+  { href: "/client/requests", label: "Mes demandes", icon: <ClipboardList /> },
+  { href: "/client/bookings", label: "Mes prestations", icon: <CalendarCheck /> },
+  { href: "/messages", label: "Messages", icon: <MessageCircle /> },
+  { href: "/client/favorites", label: "Favoris", icon: <Heart /> },
+  { href: "/client/reviews", label: "Mes avis", icon: <Star /> },
+  { href: "/client/profile", label: "Mon profil", icon: <User /> },
 ];
 
 export default async function ClientLayout({ children }: { children: ReactNode }) {
