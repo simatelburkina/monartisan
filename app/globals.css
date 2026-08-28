@@ -17,6 +17,12 @@
   --danger: #dc2626;
   --warning: #d97706;
   --ring: #c2410c;
+
+  --sidebar: #1c1917;
+  --sidebar-foreground: #f5f2ec;
+  --sidebar-muted-foreground: #a8a29e;
+  --sidebar-border: #2c2620;
+  --sidebar-accent: #292421;
 }
 
 @theme inline {
@@ -36,6 +42,11 @@
   --color-danger: var(--danger);
   --color-warning: var(--warning);
   --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-muted-foreground: var(--sidebar-muted-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent: var(--sidebar-accent);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -53,6 +64,12 @@
     --primary-foreground: #1c1917;
     --secondary: #f5f2ec;
     --secondary-foreground: #1c1917;
+
+    --sidebar: #0e0b08;
+    --sidebar-foreground: #f5f2ec;
+    --sidebar-muted-foreground: #a8a29e;
+    --sidebar-border: #221c15;
+    --sidebar-accent: #1c1712;
   }
 }
 

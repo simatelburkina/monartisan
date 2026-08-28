@@ -18,12 +18,11 @@ const NAV_ITEMS: NavItem[] = [
 export default async function ClientLayout({ children }: { children: ReactNode }) {
   const me = await requireUser("client");
   return (
-    <div className="flex min-h-screen flex-col">
-      <DashboardHeader userId={me.id} />
-      <DashboardShell navItems={NAV_ITEMS} title="Espace client">
+    <>
+      <DashboardShell navItems={NAV_ITEMS} title="Espace client" headerRight={<DashboardHeader userId={me.id} />}>
         {children}
       </DashboardShell>
       <WhatsAppButton />
-    </div>
+    </>
   );
 }

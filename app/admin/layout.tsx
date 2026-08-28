@@ -19,11 +19,8 @@ const NAV_ITEMS: NavItem[] = [
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const me = await requireUser("admin");
   return (
-    <div className="flex min-h-screen flex-col">
-      <DashboardHeader userId={me.id} />
-      <DashboardShell navItems={NAV_ITEMS} title="Administration">
-        {children}
-      </DashboardShell>
-    </div>
+    <DashboardShell navItems={NAV_ITEMS} title="Administration" headerRight={<DashboardHeader userId={me.id} />}>
+      {children}
+    </DashboardShell>
   );
 }

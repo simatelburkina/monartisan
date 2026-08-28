@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Hammer } from "lucide-react";
+import Image from "next/image";
 import { getCurrentUser } from "@/lib/data/auth";
 import { LogoutButton } from "./logout-button";
 
@@ -11,9 +11,7 @@ export async function Navbar() {
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 font-bold text-lg text-primary">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
-            <Hammer size={18} strokeWidth={2} />
-          </span>
+          <Image src="/icons/logo-mark.png" alt="" width={36} height={36} className="h-9 w-9" priority />
           <span>
             MON ARTISAN
             <span className="hidden sm:inline text-xs font-normal text-muted-foreground">

@@ -19,12 +19,11 @@ const NAV_ITEMS: NavItem[] = [
 export default async function ArtisanLayout({ children }: { children: ReactNode }) {
   const me = await requireUser("artisan");
   return (
-    <div className="flex min-h-screen flex-col">
-      <DashboardHeader userId={me.id} />
-      <DashboardShell navItems={NAV_ITEMS} title="Espace artisan">
+    <>
+      <DashboardShell navItems={NAV_ITEMS} title="Espace artisan" headerRight={<DashboardHeader userId={me.id} />}>
         {children}
       </DashboardShell>
       <WhatsAppButton />
-    </div>
+    </>
   );
 }
