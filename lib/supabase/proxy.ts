@@ -5,10 +5,22 @@ import { NextResponse, type NextRequest } from "next/server";
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
+  const path = request.nextUrl.pathname;
+  const isPrivate = path.startsWith("/client") || path.startsWith("/artisan") || path.startsWith("/admin");
+  const isAuthPage = path.startsWith("/login") || path.startsWith("/register");
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  // Sans variables d'environnement, on ne peut pas vérifier la session : ne jamais planter
+  // le middleware (ça fait tomber toute l'app), on laisse simplement passer la requête.
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error("Supabase env vars missing in middleware — auth checks skipped.");
+    return response;
+  }
+
+  try {
+    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
       cookies: {
         getAll() {
           return request.cookies.getAll();
@@ -21,42 +33,49 @@ export async function updateSession(request: NextRequest) {
           );
         },
       },
+    });
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (isPrivate && !user) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("next", path);
+      return NextResponse.redirect(url);
     }
-  );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const path = request.nextUrl.pathname;
-  const isPrivate = path.startsWith("/client") || path.startsWith("/artisan") || path.startsWith("/admin");
-  const isAuthPage = path.startsWith("/login") || path.startsWith("/register");
-
-  if (isPrivate && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    url.searchParams.set("next", path);
-    return NextResponse.redirect(url);
-  }
-
-  if (isAuthPage && user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    return NextResponse.redirect(url);
-  }
-
-  if (path.startsWith("/admin") && user) {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
-    if (profile?.role !== "admin") {
+    if (isAuthPage && user) {
       const url = request.nextUrl.clone();
       url.pathname = "/";
       return NextResponse.redirect(url);
     }
-  }
 
-  return response;
+    if (path.startsWith("/admin") && user) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      if (profile?.role !== "admin") {
+        const url = request.nextUrl.clone();
+        url.pathname = "/";
+        return NextResponse.redirect(url);
+      }
+    }
+
+    return response;
+  } catch (err) {
+    // Une erreur réseau/Supabase ici ne doit jamais faire planter le middleware :
+    // ça renvoie une réponse invalide au navigateur (page blanche "server error").
+    console.error("Supabase middleware error:", err);
+    if (isPrivate) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/login";
+      url.searchParams.set("next", path);
+      return NextResponse.redirect(url);
+    }
+    return response;
+  }
 }
