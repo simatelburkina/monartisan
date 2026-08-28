@@ -25,6 +25,8 @@ export default async function ArtisanDetailPage({ params }: { params: Promise<{ 
   const categories = (artisan.artisan_categories as Array<{ hourly_rate: number | null; categories: { id: string; name: string; slug: string; icon: string } }>) || [];
   const zones = (artisan.artisan_zones as Array<{ city: string; district: string | null }>) || [];
   const portfolio = (artisan.portfolio_items as Array<{ id: string; image_url: string; caption: string | null }>) || [];
+  const availability = (artisan.artisan_availability as Array<{ id: string; weekday: number; start_time: string; end_time: string }>) || [];
+  const WEEKDAYS = ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"];
 
   let isFavorited = false;
   if (me?.role === "client") {
@@ -109,6 +111,22 @@ export default async function ArtisanDetailPage({ params }: { params: Promise<{ 
           <p className="mt-2 text-sm text-muted-foreground">
             {zones.map((z) => `${z.city}${z.district ? ` (${z.district})` : ""}`).join(" · ")}
           </p>
+        </section>
+      )}
+
+      {availability.length > 0 && (
+        <section className="mt-6 rounded-2xl border border-border bg-card p-6">
+          <h2 className="font-semibold">Disponibilités</h2>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {availability
+              .slice()
+              .sort((a, b) => a.weekday - b.weekday)
+              .map((a) => (
+                <span key={a.id} className="rounded-full bg-muted px-3 py-1.5 text-sm text-muted-foreground">
+                  {WEEKDAYS[a.weekday]} {a.start_time.slice(0, 5)}–{a.end_time.slice(0, 5)}
+                </span>
+              ))}
+          </div>
         </section>
       )}
 

@@ -6,8 +6,10 @@ export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
   const path = request.nextUrl.pathname;
-  const isPrivate = path.startsWith("/client") || path.startsWith("/artisan") || path.startsWith("/admin");
-  const isAuthPage = path.startsWith("/login") || path.startsWith("/register");
+  const startsWithSegment = (prefix: string) => path === prefix || path.startsWith(`${prefix}/`);
+  const isPrivate =
+    startsWithSegment("/client") || startsWithSegment("/artisan") || startsWithSegment("/admin");
+  const isAuthPage = startsWithSegment("/login") || startsWithSegment("/register");
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -60,7 +62,7 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    if (path.startsWith("/admin") && user) {
+    if (startsWithSegment("/admin") && user) {
       const { data: profile } = await supabase
         .from("profiles")
         .select("role")

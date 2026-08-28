@@ -5,12 +5,17 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { initials } from "@/lib/utils/format";
 import type { Profile } from "@/lib/types/database";
+import { LocationPicker } from "@/components/shared/location-picker";
 
 export function ProfileForm({ profile }: { profile: Profile }) {
   const router = useRouter();
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url);
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [coords, setCoords] = useState<{ lat: number | null; lng: number | null }>({
+    lat: profile.lat,
+    lng: profile.lng,
+  });
   const supabase = createClient();
 
   async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -39,6 +44,8 @@ export function ProfileForm({ profile }: { profile: Profile }) {
         address: form.get("address"),
         city: form.get("city"),
         avatar_url: avatarUrl,
+        lat: coords.lat,
+        lng: coords.lng,
       })
       .eq("id", profile.id);
 
@@ -91,6 +98,14 @@ export function ProfileForm({ profile }: { profile: Profile }) {
       <div>
         <label className="label">Adresse</label>
         <input name="address" defaultValue={profile.address || ""} className="input" />
+      </div>
+      <div>
+        <label className="label">Localisation</label>
+        <LocationPicker
+          lat={coords.lat}
+          lng={coords.lng}
+          onChange={(lat, lng) => setCoords({ lat, lng })}
+        />
       </div>
 
       {saved && <p className="text-sm text-accent">Profil mis à jour.</p>}

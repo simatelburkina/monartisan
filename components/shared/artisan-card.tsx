@@ -10,10 +10,14 @@ export interface ArtisanCardData {
   company_name: string | null;
   avatar_url: string | null;
   city: string | null;
+  lat?: number | null;
+  lng?: number | null;
   headline: string | null;
   rating_avg: number;
   rating_count: number;
   is_verified: boolean;
+  years_experience?: number;
+  distance_km?: number | null;
   categories?: string[];
 }
 
@@ -46,6 +50,7 @@ export function ArtisanCard({ artisan }: { artisan: ArtisanCardData }) {
           {artisan.city && (
             <p className="flex items-center gap-1 text-xs text-muted-foreground">
               <MapPin size={12} strokeWidth={1.75} /> {artisan.city}
+              {artisan.distance_km != null && ` · ${artisan.distance_km.toFixed(1)} km`}
             </p>
           )}
         </div>

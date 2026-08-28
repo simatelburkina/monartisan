@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import type { Category } from "@/lib/types/database";
+import { LocationPicker } from "@/components/shared/location-picker";
 
 interface ItemDraft {
   categoryId: string;
@@ -23,6 +24,7 @@ export function NewRequestForm({
   const [files, setFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [coords, setCoords] = useState<{ lat: number | null; lng: number | null }>({ lat: null, lng: null });
 
   function updateItem(index: number, patch: Partial<ItemDraft>) {
     setItems((prev) => prev.map((it, i) => (i === index ? { ...it, ...patch } : it)));
@@ -62,6 +64,8 @@ export function NewRequestForm({
         description: form.get("description"),
         address: form.get("address"),
         city: form.get("city"),
+        lat: coords.lat ?? undefined,
+        lng: coords.lng ?? undefined,
         desiredDate: form.get("desiredDate") || undefined,
         desiredTime: form.get("desiredTime") || undefined,
         budgetMin: form.get("budgetMin") ? Number(form.get("budgetMin")) : undefined,
@@ -152,6 +156,10 @@ export function NewRequestForm({
         <div>
           <label className="label">Adresse précise</label>
           <input name="address" placeholder="Quartier, secteur..." className="input" />
+        </div>
+        <div className="col-span-2">
+          <label className="label">Localisation</label>
+          <LocationPicker lat={coords.lat} lng={coords.lng} onChange={(lat, lng) => setCoords({ lat, lng })} />
         </div>
         <div>
           <label className="label">Date souhaitée</label>

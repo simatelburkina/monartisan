@@ -6,6 +6,7 @@ import { ArtisanProfessionalForm } from "./artisan-professional-form";
 import { CategoriesEditor } from "./categories-editor";
 import { ZonesEditor } from "./zones-editor";
 import { PortfolioEditor } from "./portfolio-editor";
+import { AvailabilityEditor } from "./availability-editor";
 
 export const metadata = { title: "Mon profil" };
 
@@ -13,13 +14,15 @@ export default async function ArtisanProfilePage() {
   const me = await requireUser("artisan");
   const supabase = await createClient();
 
-  const [{ data: artisan }, categories, { data: myCategories }, { data: zones }, { data: portfolio }] = await Promise.all([
-    supabase.from("artisans").select("*").eq("id", me.id).single(),
-    getCategories(),
-    supabase.from("artisan_categories").select("category_id, hourly_rate").eq("artisan_id", me.id),
-    supabase.from("artisan_zones").select("*").eq("artisan_id", me.id),
-    supabase.from("portfolio_items").select("*").eq("artisan_id", me.id).order("created_at", { ascending: false }),
-  ]);
+  const [{ data: artisan }, categories, { data: myCategories }, { data: zones }, { data: portfolio }, { data: availability }] =
+    await Promise.all([
+      supabase.from("artisans").select("*").eq("id", me.id).single(),
+      getCategories(),
+      supabase.from("artisan_categories").select("category_id, hourly_rate").eq("artisan_id", me.id),
+      supabase.from("artisan_zones").select("*").eq("artisan_id", me.id),
+      supabase.from("portfolio_items").select("*").eq("artisan_id", me.id).order("created_at", { ascending: false }),
+      supabase.from("artisan_availability").select("*").eq("artisan_id", me.id).order("weekday", { ascending: true }),
+    ]);
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-8">
@@ -55,6 +58,11 @@ export default async function ArtisanProfilePage() {
       <section>
         <h2 className="mb-2 font-semibold">Photos de réalisations</h2>
         <PortfolioEditor artisanId={me.id} initialItems={portfolio || []} />
+      </section>
+
+      <section>
+        <h2 className="mb-2 font-semibold">Disponibilités hebdomadaires</h2>
+        <AvailabilityEditor artisanId={me.id} initialSlots={availability || []} />
       </section>
     </div>
   );

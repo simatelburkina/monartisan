@@ -265,6 +265,14 @@ export interface ArtisanZone {
   created_at: string;
 }
 
+export interface ArtisanAvailability {
+  id: string;
+  artisan_id: string;
+  weekday: number;
+  start_time: string;
+  end_time: string;
+}
+
 export interface DocumentRow {
   id: string;
   artisan_id: string;
