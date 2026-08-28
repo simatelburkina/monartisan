@@ -28,7 +28,7 @@ export default async function HomePage() {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-background/85" />
+        <div className="absolute inset-0 bg-background/40" />
         <div className="relative mx-auto max-w-3xl text-center">
           <h1 className="text-3xl font-bold tracking-tight sm:text-5xl">
             Que recherchez-vous ?
