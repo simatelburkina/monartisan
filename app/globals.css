@@ -116,7 +116,7 @@ body {
 }
 .btn-primary {
   height: 2.85rem;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   background: var(--primary);
   color: var(--primary-foreground);
   font-weight: 600;
@@ -135,7 +135,7 @@ body {
 }
 .btn-secondary {
   height: 2.85rem;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
   background: var(--muted);
   color: var(--foreground);
   font-weight: 600;

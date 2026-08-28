@@ -65,7 +65,7 @@ export function DashboardShell({
     <div className="min-h-screen bg-background">
       <aside
         className={`fixed inset-y-0 left-0 z-30 hidden flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-[width] duration-200 md:flex ${
-          collapsed ? "w-[76px]" : "w-64"
+          collapsed ? "w-16" : "w-52"
         }`}
       >
         <div className="flex h-16 shrink-0 items-center gap-2.5 border-b border-sidebar-border px-4">
@@ -124,7 +124,7 @@ export function DashboardShell({
 
       <div
         className={`flex min-h-screen flex-col transition-[margin] duration-200 ${
-          collapsed ? "md:ml-[76px]" : "md:ml-64"
+          collapsed ? "md:ml-16" : "md:ml-52"
         }`}
       >
         <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-3 border-b border-border bg-background/95 px-4 backdrop-blur">

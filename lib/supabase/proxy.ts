@@ -46,9 +46,17 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.redirect(url);
     }
 
-    if (isAuthPage && user) {
+    const isHome = path === "/";
+
+    if (user && (isAuthPage || isHome)) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .single();
+      // Un utilisateur connecté est automatiquement redirigé vers son espace pro/client/admin.
       const url = request.nextUrl.clone();
-      url.pathname = "/";
+      url.pathname = `/${profile?.role || "client"}`;
       return NextResponse.redirect(url);
     }
 
