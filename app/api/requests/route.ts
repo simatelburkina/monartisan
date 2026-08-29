@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { notifyMany } from "@/lib/data/notify";
+import { distanceKm } from "@/lib/utils/format";
 
 interface RequestItemInput {
   categoryId: string;
@@ -91,7 +92,8 @@ export async function POST(req: Request) {
     );
   }
 
-  // Notifie les artisans dont le métier correspond à l'une des prestations demandées
+  // Notifie les artisans dont le métier correspond à l'une des prestations demandées,
+  // en priorisant ceux dont la zone d'intervention ou le rayon de service couvre la demande.
   const admin = createAdminClient();
   const categoryIds = [...new Set(items.map((i) => i.categoryId))];
   const { data: matchingArtisans } = await admin
@@ -99,7 +101,44 @@ export async function POST(req: Request) {
     .select("artisan_id")
     .in("category_id", categoryIds);
 
-  const artisanIds = [...new Set((matchingArtisans || []).map((r) => r.artisan_id as string))];
+  let artisanIds = [...new Set((matchingArtisans || []).map((r) => r.artisan_id as string))];
+
+  if (artisanIds.length && (city || (lat != null && lng != null))) {
+    const [{ data: zones }, { data: artisanProfiles }, { data: artisanRows }] = await Promise.all([
+      admin.from("artisan_zones").select("artisan_id, city").in("artisan_id", artisanIds),
+      admin.from("profiles").select("id, lat, lng").in("id", artisanIds),
+      admin.from("artisans").select("id, service_radius_km").in("id", artisanIds),
+    ]);
+
+    const radiusByArtisan = new Map((artisanRows || []).map((a) => [a.id as string, (a.service_radius_km as number) || 15]));
+    const zonesByArtisan = new Map<string, string[]>();
+    (zones || []).forEach((z) => {
+      const list = zonesByArtisan.get(z.artisan_id as string) || [];
+      list.push(((z.city as string) || "").toLowerCase().trim());
+      zonesByArtisan.set(z.artisan_id as string, list);
+    });
+    const profileById = new Map((artisanProfiles || []).map((p) => [p.id as string, p]));
+    const normalizedCity = city?.toLowerCase().trim();
+
+    const filtered = artisanIds.filter((id) => {
+      const artisanZones = zonesByArtisan.get(id);
+      if (normalizedCity && artisanZones?.length) {
+        return artisanZones.includes(normalizedCity);
+      }
+      if (lat != null && lng != null) {
+        const p = profileById.get(id);
+        if (p?.lat != null && p?.lng != null) {
+          return distanceKm(lat, lng, p.lat, p.lng) <= (radiusByArtisan.get(id) || 15);
+        }
+      }
+      // Ni zone déclarée ni position connue pour cet artisan : on le garde plutôt
+      // que de risquer d'exclure à tort un artisan disponible.
+      return true;
+    });
+
+    if (filtered.length) artisanIds = filtered;
+  }
+
   await notifyMany(artisanIds, {
     type: "new_request",
     title: "Nouvelle demande dans votre métier",

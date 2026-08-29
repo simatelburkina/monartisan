@@ -22,6 +22,11 @@ export async function POST(req: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   const admin = createAdminClient();
+
+  if (bookingId) {
+    await admin.from("bookings").update({ status: "disputed" }).eq("id", bookingId);
+  }
+
   const { data: admins } = await admin.from("profiles").select("id").eq("role", "admin");
   await notifyMany((admins || []).map((a) => a.id), {
     type: "complaint_update",

@@ -50,6 +50,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
       .select()
       .single();
 
+    await supabase.from("requests").update({ status: "scheduled" }).eq("id", item.request_id);
+
     await notify({
       userId: quote.artisan_id,
       type: "quote_accepted",

@@ -1,5 +1,5 @@
 import { getAllUsers } from "@/lib/data/admin";
-import { UserStatusActions } from "@/components/shared/user-status-actions";
+import { UserStatusActions, UserEditButton } from "@/components/shared/user-status-actions";
 import { initials, formatDate } from "@/lib/utils/format";
 
 export const metadata = { title: "Utilisateurs" };
@@ -55,7 +55,10 @@ export default async function AdminUsersPage({ searchParams }: { searchParams: P
                   <span className={`rounded-full px-2.5 py-1 text-xs font-medium ${STATUS_COLORS[u.status]}`}>{u.status}</span>
                 </td>
                 <td className="px-4 py-3">
-                  {u.role !== "admin" && <UserStatusActions userId={u.id} status={u.status} />}
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <UserEditButton user={u} />
+                    {u.role !== "admin" && <UserStatusActions userId={u.id} status={u.status} />}
+                  </div>
                 </td>
               </tr>
             ))}

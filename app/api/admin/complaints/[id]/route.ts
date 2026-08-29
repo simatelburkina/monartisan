@@ -22,6 +22,13 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
   if (updateError) return NextResponse.json({ error: updateError.message }, { status: 500 });
 
+  if (complaint?.booking_id && ["resolved", "rejected"].includes(newStatus)) {
+    const { data: booking } = await supabase.from("bookings").select("status").eq("id", complaint.booking_id).single();
+    if (booking?.status === "disputed") {
+      await supabase.from("bookings").update({ status: "closed", closed_at: new Date().toISOString() }).eq("id", complaint.booking_id);
+    }
+  }
+
   if (complaint) {
     await notify({
       userId: complaint.reporter_id,

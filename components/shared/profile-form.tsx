@@ -12,6 +12,8 @@ export function ProfileForm({ profile }: { profile: Profile }) {
   const [avatarUrl, setAvatarUrl] = useState(profile.avatar_url);
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [emailChangePending, setEmailChangePending] = useState(false);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [coords, setCoords] = useState<{ lat: number | null; lng: number | null }>({
     lat: profile.lat,
     lng: profile.lng,
@@ -32,7 +34,18 @@ export function ProfileForm({ profile }: { profile: Profile }) {
     e.preventDefault();
     setLoading(true);
     setSaved(false);
+    setEmailError(null);
     const form = new FormData(e.currentTarget);
+    const newEmail = String(form.get("email") || "").trim();
+
+    if (newEmail && newEmail !== profile.email) {
+      const { error: emailErr } = await supabase.auth.updateUser({ email: newEmail });
+      if (emailErr) {
+        setEmailError(emailErr.message);
+      } else {
+        setEmailChangePending(true);
+      }
+    }
 
     const { error } = await supabase
       .from("profiles")
@@ -41,6 +54,7 @@ export function ProfileForm({ profile }: { profile: Profile }) {
         last_name: form.get("lastName"),
         display_name: `${form.get("firstName")} ${form.get("lastName")}`.trim(),
         phone: form.get("phone"),
+        email: newEmail || profile.email,
         address: form.get("address"),
         city: form.get("city"),
         avatar_url: avatarUrl,
@@ -85,7 +99,13 @@ export function ProfileForm({ profile }: { profile: Profile }) {
       </div>
       <div>
         <label className="label">Email</label>
-        <input value={profile.email || ""} disabled className="input opacity-60" />
+        <input name="email" type="email" defaultValue={profile.email || ""} className="input" />
+        {emailChangePending && (
+          <p className="mt-1 text-xs text-accent">
+            Un email de confirmation a été envoyé à la nouvelle adresse. Le changement prend effet une fois le lien cliqué.
+          </p>
+        )}
+        {emailError && <p className="mt-1 text-xs text-danger">{emailError}</p>}
       </div>
       <div>
         <label className="label">Téléphone</label>
